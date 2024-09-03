@@ -18,6 +18,7 @@ struct CarouselListViewState {
     var mealTypesDetailData: FinancialServicesContainer?
     var financialServices: [FinancialService]?
     var serviceDetailList: [ServiceDetail]?
+    var filteredServiceDetailList: [ServiceDetail]?
     var showBottomSheet = false
     var currentIndex: Int = 0
     var currentServiceTitle: String = ""
@@ -45,6 +46,7 @@ class CarouselViewModel: CarouselListDelegate {
     func fetchServicesList(currentIndex: Int) {
         viewState.currentServiceTitle = viewState.financialServices?[currentIndex].typeTitle ?? ""
         viewState.serviceDetailList = viewState.financialServices?[currentIndex].listData
+        viewState.filteredServiceDetailList = viewState.financialServices?[currentIndex].listData
     }
     
     func seachServices(searchText: String) {
@@ -57,18 +59,18 @@ class CarouselViewModel: CarouselListDelegate {
         // Get the list of service details for the current index
         if let listData = financialServices[viewState.currentIndex].listData {
             // Filter the list based on the search text
-            viewState.serviceDetailList = searchText.isEmpty ? listData : listData.filter { service in
+            viewState.filteredServiceDetailList = searchText.isEmpty ? listData : listData.filter { service in
                 service.title?.localizedCaseInsensitiveContains(searchText) ?? false
             }
         } else {
             viewState.serviceDetailList = nil
         }
+        viewState.serviceDetailList = viewState.filteredServiceDetailList
     }
     
     func reloadServices(currentIndex: Int) {
         viewState.searchText = ""
         viewState.currentIndex = currentIndex
         fetchServicesList(currentIndex: viewState.currentIndex)
-        seachServices(searchText: viewState.searchText)
     }
 }

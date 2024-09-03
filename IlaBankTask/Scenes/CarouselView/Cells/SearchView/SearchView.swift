@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SearchViewDelegate: AnyObject {
-    func didUpdateSearchText(_ searchText: String)
+    func didUpdateSearchText(_ searchText: String, _ searchBar: UISearchBar)
 }
 
 class SearchView: UICollectionReusableView, Reusable {
@@ -23,6 +23,7 @@ class SearchView: UICollectionReusableView, Reusable {
     
     let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
+        searchBar.text = ""
         searchBar.layer.borderWidth = 1
         searchBar.layer.borderColor = UIColor.white.cgColor
         searchBar.showsCancelButton = true
@@ -57,13 +58,12 @@ class SearchView: UICollectionReusableView, Reusable {
 extension SearchView: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        delegate?.didUpdateSearchText(searchText)
-        searchBar.becomeFirstResponder()
+        delegate?.didUpdateSearchText(searchText, searchBar)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
-        delegate?.didUpdateSearchText("")
+        delegate?.didUpdateSearchText("", searchBar)
     }
     
 }

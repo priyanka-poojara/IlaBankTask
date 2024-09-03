@@ -16,17 +16,16 @@ extension CarouselListViewController: UICollectionViewDelegate {
     private func carouselListLayout() -> UICollectionViewCompositionalLayout {
         
         return UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
-            
             switch sectionIndex {
             case 0: return self.createCarouselSection()
-            case 1: return self.createSearchSection()
-            case 2: return self.createCarouselListSection()
+            case 1: return self.createCarouselListSection()
             default: return nil
             }
         }
         
     }
     
+    // Carousel List Sizing
     private func createCarouselSection() -> NSCollectionLayoutSection {
         
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
@@ -45,33 +44,13 @@ extension CarouselListViewController: UICollectionViewDelegate {
         
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, point, env in
             guard let self = self else { return }
-            
-            guard let lastVisibleItem = visibleItems.last else { return }
-            
-            let currentIndexPath = lastVisibleItem.indexPath
-            print("LAST VISIBLE ITEM",currentIndexPath)
-            if viewModel?.viewState.currentIndex != currentIndexPath.row {
-                // Update the page control in the footer view
-                if let financialServices = viewModel?.viewState.financialServices,
-                   let collectionView = self.clvCarouselList,
-                   let footerView = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(item: 0, section: 0)) as? PageControlView {
-                    
-                    let totalPages = financialServices.count
-                    footerView.pageControlViewDidUpdatePage(to: currentIndexPath.row, totalPageCount: totalPages)
-                    
-                    // Reload data only when the index changes
-                    viewModel?.reloadServices(currentIndex: currentIndexPath.row)
-                    title = viewModel?.viewState.currentServiceTitle
-                    collectionView.reloadSections(IndexSet(integer: 2))
-                    collectionView.reloadSections(IndexSet(integer: 1))
-                }
-            }
+                updatePageControlAndReloadData(withVisibleItems: visibleItems, point: point)
         }
-//        handleVisibleItemsInvalidation
         
         return section
     }
     
+    // Carousel Services List Sizing
     private func createCarouselListSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -82,33 +61,18 @@ extension CarouselListViewController: UICollectionViewDelegate {
         
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = 0
-//        section.boundarySupplementaryItems = [createHeader()]
+        section.boundarySupplementaryItems = [createHeader()]
 
         return section
     }
     
-    private func createSearchSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        // Create an empty group since we don't want any items in the section
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(1))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-        
-        // Create the section with the empty group
-        let section = NSCollectionLayoutSection(group: group)
-        
-        // Add the header to the section
-        section.boundarySupplementaryItems = [createHeader()]
-        
-        return section
-    }
-
+    // Footer Sizing
     private func createFooter() -> NSCollectionLayoutBoundarySupplementaryItem {
         let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(20))
         return NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize, elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
     }
     
+    // Header Sizing
     private func createHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(70))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
@@ -117,36 +81,64 @@ extension CarouselListViewController: UICollectionViewDelegate {
         return header
     }
     
-    private func handleVisibleItemsInvalidation(visibleItems: [NSCollectionLayoutVisibleItem], point: CGPoint, environment: NSCollectionLayoutEnvironment) {
-        guard let currentIndexPath = visibleItems.last?.indexPath,
-              viewModel?.viewState.currentIndex != currentIndexPath.row else { return }
-        
-        // Update the page control in the footer view
-        if let financialServices = viewModel?.viewState.financialServices,
-           let collectionView = self.clvCarouselList,
-           let footerView = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(item: 0, section: 0)) as? PageControlView {
-            
-            let totalPages = financialServices.count
-            footerView.pageControlViewDidUpdatePage(to: currentIndexPath.row, totalPageCount: totalPages)
-            
-            // Reload data only when the index changes
-            viewModel?.reloadServices(currentIndex: currentIndexPath.row)
-//            print(currentIndexPath.row)
-            print("Create Carousel called, \(currentIndexPath.row)")
-            title = viewModel?.viewState.currentServiceTitle
-            collectionView.reloadSections(IndexSet(integer: 2))
+    // Update carousel state & Page Control
+    func updatePageControlAndReloadData(
+        withVisibleItems visibleItems: [NSCollectionLayoutVisibleItem],
+        point: CGPoint
+    ) {
+        guard let lastVisibleItem = visibleItems.last else { return }
+
+        let currentIndexPath = lastVisibleItem.indexPath
+        print("LAST ITEM", currentIndexPath, "POINT", point, "CURRENT INDEX:", viewModel?.viewState.currentIndex ?? 7)
+
+        if viewModel?.viewState.currentIndex != currentIndexPath.row && point.y <= 0 {
+            // Update the page control in the footer view
+            if let financialServices = viewModel?.viewState.financialServices,
+               let collectionView = self.clvCarouselList,
+               let footerView = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(item: 0, section: 0)) as? PageControlView {
+                
+                let totalPages = financialServices.count
+                footerView.pageControlViewDidUpdatePage(to: currentIndexPath.row, totalPageCount: totalPages)
+                
+                // Reload data only when the index changes
+                viewModel?.reloadServices(currentIndex: currentIndexPath.row)
+                title = viewModel?.viewState.currentServiceTitle
+                
+                DispatchQueue.main.async {
+                    collectionView.reloadSections(IndexSet(integer: 1))
+                }
+            }
         }
     }
-    
 }
 
+// MARK: Search View Delegate
 extension CarouselListViewController: SearchViewDelegate {
     
-    func didUpdateSearchText(_ searchText: String) {
-        viewModel?.seachServices(searchText: searchText)
+    /// Section items alone can not reload due to that delete filtered items and inserted items
+    func didUpdateSearchText(_ searchText: String, _ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        guard let collectionView = clvCarouselList else { return }
         
-        clvCarouselList.reloadSections(IndexSet(integer: 2))
+        let sectionIndex = 1 // Assuming list in first section in accordance to current data
 
+        /// **Removing existing list and deleting all items from collection
+        let numberOfItemsBeforeUpdate = viewModel?.viewState.serviceDetailList?.count ?? 0
+        let indexPathsToDelete = (0..<numberOfItemsBeforeUpdate).map { IndexPath(item: $0, section: sectionIndex) }
+        viewModel?.viewState.serviceDetailList = nil
+        DispatchQueue.main.async {
+            collectionView.deleteItems(at: indexPathsToDelete)
+        }
+        
+        /// **Updating filtered search list and inserting new available data
+        viewModel?.seachServices(searchText: searchText)
+        let updatedItemCount = viewModel?.viewState.serviceDetailList?.count ?? 0
+        let newIndexPaths = (0..<updatedItemCount).map { IndexPath(item: $0, section: sectionIndex) }
+
+        DispatchQueue.main.async {
+            collectionView.insertItems(at: newIndexPaths)
+        }
+        searchBar.becomeFirstResponder()
     }
     
 }
