@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9218EC072C871A8A00FDB91E /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9218EC052C871A8A00FDB91E /* BottomSheetViewController.swift */; };
+		9218EC082C871A8A00FDB91E /* BottomSheetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9218EC062C871A8A00FDB91E /* BottomSheetViewController.xib */; };
 		923287E22C80D562002E1A30 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923287E12C80D562002E1A30 /* AppDelegate.swift */; };
 		923287E42C80D562002E1A30 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923287E32C80D562002E1A30 /* SceneDelegate.swift */; };
 		923287E62C80D562002E1A30 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923287E52C80D562002E1A30 /* ViewController.swift */; };
@@ -32,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9218EC052C871A8A00FDB91E /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
+		9218EC062C871A8A00FDB91E /* BottomSheetViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSheetViewController.xib; sourceTree = "<group>"; };
 		923287DE2C80D562002E1A30 /* IlaBankTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IlaBankTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		923287E12C80D562002E1A30 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		923287E32C80D562002E1A30 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -69,6 +73,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9218EC042C8719EB00FDB91E /* BottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				9218EC052C871A8A00FDB91E /* BottomSheetViewController.swift */,
+				9218EC062C871A8A00FDB91E /* BottomSheetViewController.xib */,
+			);
+			path = BottomSheet;
+			sourceTree = "<group>";
+		};
 		923287D52C80D562002E1A30 = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +118,7 @@
 		923287F52C80D57A002E1A30 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				9218EC042C8719EB00FDB91E /* BottomSheet */,
 				923287F62C80D957002E1A30 /* CarouselView */,
 			);
 			path = Scenes;
@@ -272,6 +286,7 @@
 				923287FE2C80D9EF002E1A30 /* CarouselListViewController.xib in Resources */,
 				923287EB2C80D567002E1A30 /* Assets.xcassets in Resources */,
 				923288072C80E3D9002E1A30 /* FinanceService.json in Resources */,
+				9218EC082C871A8A00FDB91E /* BottomSheetViewController.xib in Resources */,
 				923287EE2C80D567002E1A30 /* Base in Resources */,
 				923287E92C80D562002E1A30 /* Base in Resources */,
 				9232880F2C80E533002E1A30 /* CarouselCell.xib in Resources */,
@@ -293,6 +308,7 @@
 				923288282C81A26B002E1A30 /* SearchView.swift in Sources */,
 				925DD0E72C858DFD00170858 /* JsonFileLoader.swift in Sources */,
 				923288122C80E5A7002E1A30 /* CarouselList+Delegate.swift in Sources */,
+				9218EC072C871A8A00FDB91E /* BottomSheetViewController.swift in Sources */,
 				9232882A2C81A643002E1A30 /* PageControlView.swift in Sources */,
 				923287E62C80D562002E1A30 /* ViewController.swift in Sources */,
 				9232880E2C80E533002E1A30 /* CarouselCell.swift in Sources */,

@@ -9,6 +9,8 @@ import UIKit
 
 class CarouselListViewController: UIViewController {
     
+    @IBOutlet weak var btnFloating: UIButton!
+        
     @IBOutlet weak var clvCarouselList: UICollectionView!
     
     var viewModel: CarouselViewModel? = CarouselViewModel()
@@ -34,4 +36,17 @@ class CarouselListViewController: UIViewController {
         clvCarouselList.registerReusableCell(CarouselListCell.self)
     }
     
+    @IBAction func actionFloatingButton(_ sender: Any) {
+        let vc = BottomSheetViewController()
+        vc.modalTransitionStyle = .coverVertical
+        vc.modalPresentationStyle = .pageSheet
+        if let services = viewModel?.viewState.serviceDetailList {
+            vc.financialServices = services
+        }
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        self.navigationController?.present(vc, animated: true)
+    }
 }
