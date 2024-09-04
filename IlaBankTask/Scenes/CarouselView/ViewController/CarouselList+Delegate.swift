@@ -126,12 +126,10 @@ extension CarouselListViewController: SearchViewDelegate {
         let numberOfItemsBeforeUpdate = viewModel?.viewState.serviceDetailList?.count ?? 0
         let indexPathsToDelete = (0..<numberOfItemsBeforeUpdate).map { IndexPath(item: $0, section: sectionIndex) }
         viewModel?.viewState.serviceDetailList = nil
-        DispatchQueue.main.async {
-            collectionView.deleteItems(at: indexPathsToDelete)
-        }
+        collectionView.deleteItems(at: indexPathsToDelete)
+        self.viewModel?.seachServices(searchText: searchText)
         
         /// **Updating filtered search list and inserting new available data
-        viewModel?.seachServices(searchText: searchText)
         let updatedItemCount = viewModel?.viewState.serviceDetailList?.count ?? 0
         let newIndexPaths = (0..<updatedItemCount).map { IndexPath(item: $0, section: sectionIndex) }
 
