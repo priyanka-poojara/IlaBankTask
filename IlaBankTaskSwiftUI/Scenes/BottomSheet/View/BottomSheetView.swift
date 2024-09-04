@@ -31,22 +31,22 @@ struct BottomSheetView: View {
         .shadow(radius: 10)
     }
     
-    private func calculateCharacterFrequency(from services: [ServiceDetail]) -> [(key: Character, value: Int)] {
-        var frequencyDict = [Character: Int]()
+    private func calculateCharacterFrequency(from services: [ServiceDetail]) -> [(key: String, value: Int)] {
+        var frequencyDict = [String: Int]()
         
         // Aggregate all titles from typeTitle and listData titles
         let allText = services.flatMap { service in
             // Extract titles from each service
             let titles = [service.title]
             return  titles.compactMap { $0 }
-            
         }
         
         // Count character occurrences
         for text in allText {
             for char in text.lowercased() {
                 if char.isLetter {
-                    frequencyDict[char, default: 0] += 1
+                    let charString = String(char)
+                    frequencyDict[charString, default: 0] += 1
                 }
             }
         }
