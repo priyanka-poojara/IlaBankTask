@@ -23,7 +23,6 @@ struct BottomSheetView: View {
             ForEach(characterCount.prefix(3), id: \.key) { char, count in
                 Text("\(char) = \(count)")
             }
-            
         }
         .padding()
         .background(Color.white)

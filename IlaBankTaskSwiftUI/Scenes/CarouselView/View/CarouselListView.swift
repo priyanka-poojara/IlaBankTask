@@ -9,18 +9,12 @@ import SwiftUI
 
 struct CarouselListView: View {
     
-    @ObservedObject var viewModel = CarouselListViewModel()
+    @StateObject var viewModel: CarouselListViewModel
 
     var body: some View {
         ZStack {
            // Carousel List Main View
             CarouselListMainView(viewModel: viewModel)
-                .onAppear() {
-                    viewModel.reloadServices()
-                }
-                .onChange(of: viewModel.viewState.currentIndex, { oldValue, newValue in
-                    viewModel.reloadServices()
-                })
             // Floating Action Button
             FloatingButton(showBottom: $viewModel.viewState.showBottomSheet)
         }
@@ -66,7 +60,7 @@ private struct FloatingButton: View {
 // MARK: Carousel List Main View
 private struct CarouselListMainView: View {
     
-    @ObservedObject var viewModel: CarouselListViewModel
+    @StateObject var viewModel: CarouselListViewModel
     
     var body: some View {
         List {
@@ -93,10 +87,17 @@ private struct CarouselListMainView: View {
                         viewModel.seachServices(searchText: newValue, currentIndex: viewModel.viewState.currentIndex)
                     }
             }.listRowSeparator(.hidden)
-        }.listStyle(.plain)
+        }
+        .listStyle(.plain)
+        .onAppear() {
+            viewModel.reloadServices()
+        }
+        .onChange(of: viewModel.viewState.currentIndex, { oldValue, newValue in
+            viewModel.reloadServices()
+        })
     }
 }
 
 #Preview {
-    CarouselListView()
+    CarouselListView(viewModel: CarouselListViewModel())
 }

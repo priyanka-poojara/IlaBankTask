@@ -12,7 +12,7 @@ struct IlaBankTaskSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                CarouselListView()
+                CarouselListView(viewModel: CarouselListViewModel())
             }
         }
     }
